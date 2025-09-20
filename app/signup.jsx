@@ -7,8 +7,8 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Signup() {
   const router = useRouter();
@@ -17,123 +17,141 @@ export default function Signup() {
   const [password, setPassword] = useState("");
 
   const handleSignup = async () => {
-    if (!name.trim() || !email.trim() || !password.trim()) {
+    console.log("Signup screen: handleSignup called");
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedPassword = password.trim();
+
+    console.log({ trimmedName, trimmedEmail, trimmedPassword });
+
+    if (!trimmedName || !trimmedEmail || !trimmedPassword) {
       Alert.alert("⚠️ Please fill all fields");
       return;
     }
 
     try {
-      const key = `user_${email.toLowerCase()}`;
-      const existingUser = await AsyncStorage.getItem(key);
+      const key = `user_${trimmedEmail}`;
+      const existing = await AsyncStorage.getItem(key);
+      console.log("Existing user for key", key, ":", existing);
 
-      if (existingUser !== null) {
-        Alert.alert("User already exists", "Please log in instead.");
+      if (existing !== null) {
+        Alert.alert("⚠️ Email already in use", "Please log in instead.");
         return;
       }
 
-      const user = {
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        password: password.trim(),
+      const newUser = {
+        name: trimmedName,
+        email: trimmedEmail,
+        password: trimmedPassword,
       };
 
-      await AsyncStorage.setItem(key, JSON.stringify(user));
+      await AsyncStorage.setItem(key, JSON.stringify(newUser));
+      console.log("User saved:", newUser);
+      Alert.alert("✅ Account created! Please login.");
 
-      Alert.alert("✅ Account created!", "Please log in.");
-      router.replace("../login"); // Redirect to login screen
-    } catch (error) {
-      Alert.alert("❌ Signup failed", "Please try again later.");
-      console.error("Signup error:", error);
+      // Clear inputs
+      setName("");
+      setEmail("");
+      setPassword("");
+
+      router.replace("login");
+    } catch (err) {
+      console.error("Signup error:", err);
+      Alert.alert("❌ Error", "Something went wrong. Try again later.");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Your CampusCare Account</Text>
+    <View style={signupStyles.wrapper}>
+      <View style={signupStyles.container}>
+        <Text style={signupStyles.title}>Create Account</Text>
 
-      <TextInput
-        placeholder="Full Name"
-        value={name}
-        onChangeText={setName}
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Full Name"
+          value={name}
+          onChangeText={setName}
+          style={signupStyles.input}
+        />
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          style={signupStyles.input}
+        />
 
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={signupStyles.input}
+        />
 
-      <Pressable style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </Pressable>
+        <Pressable style={signupStyles.button} onPress={handleSignup}>
+          <Text style={signupStyles.buttonText}>Sign Up</Text>
+        </Pressable>
 
-      <Pressable onPress={() => router.push("../login")}>
-        <Text style={styles.link}>Already have an account? Login</Text>
-      </Pressable>
+        <Pressable
+          onPress={() => {
+            console.log("Signup screen: go to Login");
+            router.push("login");
+          }}
+        >
+          <Text style={signupStyles.link}>Already have an account? Log In</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const signupStyles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: "#ffffff",  // white background
+  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#f3f0ff",
   },
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 30,
-    textAlign: "center",
-    color: "#296a95ff",
+    marginBottom: 20,
+    color: "#353596ff",
   },
   input: {
     width: "90%",
-    padding: 14,
+    padding: 12,
     borderWidth: 1,
-    borderColor: "#8bc6f6ff",
-    borderRadius: 10,
+    borderColor: "#cccccc",
+    borderRadius: 8,
     marginBottom: 15,
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
     fontSize: 16,
-    color: "#295b95ff",
+    color: "#000000",
   },
   button: {
     width: "90%",
-    backgroundColor: "#68b1bbff",
+    backgroundColor: "#70a8b3ff",
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 8,
     alignItems: "center",
     marginVertical: 10,
-    shadowColor: "#72adddff",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
   },
   buttonText: {
-    color: "white",
+    color: "#ffffff",
     fontWeight: "bold",
     fontSize: 18,
   },
   link: {
-    color: "#1b529aff",
-    marginTop: 15,
-    textDecorationLine: "underline",
+    color: "#4285f4",
+    marginTop: 10,
     fontSize: 15,
+    textDecorationLine: "underline",
   },
 });

@@ -14,29 +14,33 @@ export default function LandingPage() {
 
   return (
     <LinearGradient
-      colors={["#e0f7fa", "#f1f8ff", "#fff"]}
+      colors={["#e0f7fa", "#f1f8ff", "#ffffff"]}
       style={styles.container}
     >
       <SafeAreaView style={styles.safe}>
         <View style={styles.inner}>
-          {/* App Name */}
           <Text style={styles.title}>🏫 CampusCare</Text>
           <Text style={styles.subtitle}>
             Manage your campus life with ease ✨
           </Text>
 
-          {/* Additional Buttons */}
           <View style={styles.authButtonsContainer}>
             <TouchableOpacity
-              style={[styles.button, styles.signUpButton]}
-              onPress={() => router.push("/signup")}
+              style={[styles.button, styles.signupButton]}
+              onPress={() => {
+                console.log("Landing: Sign Up pressed");
+                router.push("signup");
+              }}
             >
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.button, styles.loginButton]}
-              onPress={() => router.push("/login")}
+              onPress={() => {
+                console.log("Landing: Log In pressed");
+                router.push("login");
+              }}
             >
               <Text style={styles.buttonText}>Log In</Text>
             </TouchableOpacity>
@@ -73,6 +77,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 40,
   },
+  authButtonsContainer: {
+    marginTop: 10,
+    width: "100%",
+    alignItems: "center",
+  },
   button: {
     backgroundColor: "#4abce2ff",
     paddingVertical: 14,
@@ -82,20 +91,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 220,
   },
+  signupButton: {
+    backgroundColor: "#34a853",
+  },
+  loginButton: {
+    backgroundColor: "#4285f4",
+  },
   buttonText: {
     color: "white",
     fontWeight: "600",
     fontSize: 18,
-  },
-  authButtonsContainer: {
-    marginTop: 10,
-    width: "100%",
-    alignItems: "center",
-  },
-  signUpButton: {
-    backgroundColor: "#34a853", // green for sign up
-  },
-  loginButton: {
-    backgroundColor: "#4285f4", // blue for login
   },
 });

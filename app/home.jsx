@@ -17,7 +17,7 @@ export default function Home() {
   const handleLogout = () => {
     setMenuVisible(false);
     Alert.alert("Logged Out", "You have been logged out.");
-    router.replace("/login");
+    router.replace("login");
   };
 
   return (
@@ -53,7 +53,7 @@ export default function Home() {
           {/* Attendance */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>📅 Attendance System</Text>
-            <Link href="/attendance" asChild>
+            <Link href="attendance" asChild>
               <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>Open Attendance</Text>
               </TouchableOpacity>
@@ -63,7 +63,7 @@ export default function Home() {
           {/* Announcements */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>📢 Announcements</Text>
-            <Link href="/announcement" asChild>
+            <Link href="announcement" asChild>
               <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>View Announcements</Text>
               </TouchableOpacity>
@@ -73,7 +73,7 @@ export default function Home() {
           {/* Class Schedule */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>📚 Class Schedule</Text>
-            <Link href="/schedule" asChild>
+            <Link href="schedule" asChild>
               <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>View Schedule</Text>
               </TouchableOpacity>
@@ -83,7 +83,7 @@ export default function Home() {
           {/* Payments */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>💰 Payments</Text>
-            <Link href="../payments" asChild>
+            <Link href="payments" asChild>
               <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>Manage Payments</Text>
               </TouchableOpacity>

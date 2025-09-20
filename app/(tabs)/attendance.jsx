@@ -8,13 +8,16 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import { useRouter } from "expo-router"; // Import router
 
-// Delete function (direct delete for testing)
+// Delete function
 const deleteStudent = (setStudents, id) => {
   setStudents((prevStudents) => prevStudents.filter((s) => s.id !== id));
 };
 
 export default function Attendance() {
+  const router = useRouter(); // Use the router for navigation
+
   const [students, setStudents] = useState([
     { id: "1", name: "Juan Dela Cruz", status: null },
     { id: "2", name: "Maria Santos", status: null },
@@ -25,14 +28,12 @@ export default function Attendance() {
   const [editingId, setEditingId] = useState(null);
   const [editingName, setEditingName] = useState("");
 
-  // Mark attendance
   const markAttendance = (id, status) => {
     setStudents((prev) =>
       prev.map((s) => (s.id === id ? { ...s, status } : s))
     );
   };
 
-  // Add or update student
   const handleAddOrUpdate = () => {
     if (!newName.trim() && editingId === null) {
       Alert.alert("Error", "Please enter a name.");
@@ -40,7 +41,6 @@ export default function Attendance() {
     }
 
     if (editingId) {
-      // Update existing student name
       setStudents((prev) =>
         prev.map((s) =>
           s.id === editingId ? { ...s, name: editingName } : s
@@ -49,7 +49,6 @@ export default function Attendance() {
       setEditingId(null);
       setEditingName("");
     } else {
-      // Add new student
       const newStudent = {
         id: (students.length + 1).toString(),
         name: newName.trim(),
@@ -61,13 +60,11 @@ export default function Attendance() {
     setNewName("");
   };
 
-  // Start editing
   const startEdit = (student) => {
     setEditingId(student.id);
     setEditingName(student.name);
   };
 
-  // Cancel editing
   const cancelEdit = () => {
     setEditingId(null);
     setEditingName("");
@@ -113,10 +110,7 @@ export default function Attendance() {
             >
               <Text style={styles.btnText}>Absent</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.editBtn}
-              onPress={() => startEdit(item)}
-            >
+            <TouchableOpacity style={styles.editBtn} onPress={() => startEdit(item)}>
               <Text style={styles.btnText}>Edit</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -133,9 +127,13 @@ export default function Attendance() {
 
   return (
     <View style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity onPress={() => router.replace("home")} style={styles.backButton}>
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Attendance System</Text>
 
-      {/* Input box for new student */}
       {editingId === null && (
         <View style={styles.inputBox}>
           <TextInput
@@ -163,6 +161,19 @@ export default function Attendance() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: "#A2D5AB" },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+
+  backButton: {
+    alignSelf: "flex-start",
+    marginBottom: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#2053a5ff",
+  },
 
   inputBox: {
     flexDirection: "row",
@@ -202,6 +213,7 @@ const styles = StyleSheet.create({
   buttonsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    flexWrap: "wrap",
   },
   attendanceBtn: {
     flex: 1,
@@ -218,6 +230,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     marginLeft: 5,
+    marginTop: 5,
   },
 
   deleteBtn: {
@@ -226,6 +239,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
     marginLeft: 5,
+    marginTop: 5,
   },
 
   editInput: {

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { useRouter } from "expo-router"; // 🧭 Import router for navigation
 
 const initialSchedule = [
   { id: "1", day: "Monday", subject: "Math", time: "8:00 AM - 9:30 AM" },
@@ -16,6 +17,8 @@ const initialSchedule = [
 ];
 
 export default function Schedule() {
+  const router = useRouter(); // 🧭 Initialize router
+
   const [schedule, setSchedule] = useState(initialSchedule);
   const [day, setDay] = useState("");
   const [subject, setSubject] = useState("");
@@ -60,6 +63,11 @@ export default function Schedule() {
 
   return (
     <View style={styles.container}>
+      {/* ← Back to Home Button */}
+      <TouchableOpacity onPress={() => router.replace("home")} style={styles.backButton}>
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Class Schedule</Text>
 
       <View style={styles.inputBox}>
@@ -104,7 +112,6 @@ export default function Schedule() {
               >
                 <Text style={styles.buttonText}>Edit</Text>
               </TouchableOpacity>
-              {/* Delete button removed */}
             </View>
           </View>
         )}
@@ -116,6 +123,20 @@ export default function Schedule() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: "#A2D5AB" },
+
+  backButton: {
+    alignSelf: "flex-start",
+    marginBottom: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#284e8aff",
+  },
+
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
 
   inputBox: {
